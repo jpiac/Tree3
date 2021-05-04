@@ -8,6 +8,8 @@
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
          integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
    crossorigin=""></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+   <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
         <style>
             #mapid {height: 100vh; max-width: 100%;}
         </style>
@@ -16,5 +18,26 @@
         <h1>Welcome to Tree.3</h1>
         <div id="mapid">
         </div>
+        <script>
+
+            var mymap = L.map('mapid').setView([0, 0], 2);
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/light-v9',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoianBpYWMiLCJhIjoiY2o1azR3ejE0MnN2ejMzbzg0b29sbGYzcSJ9.RUV9ehVJ9V3aetQCqP60tg'
+            }).addTo(mymap);
+
+            $.getJSON('https://raw.githubusercontent.com/jpiac/Tree3/main/JSONS/Countries.geojson',function(data){
+                L.geoJson(data).addTo(mymap);
+            });
+
+            
+
+
+    
+        </script>
     </body>
 </html>
