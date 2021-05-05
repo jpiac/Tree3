@@ -15,12 +15,11 @@
         </style>
     </head>
     <body>
-        <h1>Welcome to Tree.3</h1>
         <div id="mapid">
         </div>
         <script>
 
-            var mymap = L.map('mapid').setView([0, 0], 2);
+            var mymap = L.map('mapid').setView([0, 0], 2.5);
             L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
             maxZoom: 18,
@@ -30,14 +29,80 @@
             accessToken: 'pk.eyJ1IjoianBpYWMiLCJhIjoiY2o1azR3ejE0MnN2ejMzbzg0b29sbGYzcSJ9.RUV9ehVJ9V3aetQCqP60tg'
             }).addTo(mymap);
 
-            $.getJSON('https://raw.githubusercontent.com/jpiac/Tree3/main/JSONS/Countries.geojson',function(data){
-                L.geoJson(data).addTo(mymap);
+            var geojson;
+
+            var info = L.control();
+
+            function highlightFeature(e) {
+                var layer = e.target;
+
+                layer.setStyle({
+                weight: 5,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.7
+                });
+
+                if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                layer.bringToFront();
+                }  
+                
+                info.update(layer.feature.properties);
+            };
+
+            function resetHighlight(e) {
+                geojson.resetStyle(e.target);
+
+                info.update();
+            };
+
+            function onEachFeature(feature, layer) {
+                layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                });
+            };
+
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+
+            info.update = function (props) {
+                this._div.innerHTLM = '<h4>Country Name</h4>' + (props ?
+                '<b>' + props.name : 'Hover over a country');
+            };
+
+            info.addTo(mymap);
+
+            $.getJSON('https://raw.githubusercontent.com/jpiac/Tree3/main/JSONS/Countries.geojson',function(countries){
+            L.geoJson(countries).addTo(mymap);
+
+            geojson =  L.geoJson(countries, {
+                onEachFeature: onEachFeature
+            }).addTo(mymap);
+
+        
+
             });
+       </script>
+       <style>
 
-            
+           .info {
+               z-index: 999;
+               padding: 60px 80px;
+               font: 14px/16px Arial, Helvetica, sans-serif;
+               background: white;
+               background: rgba(225,225,225,0.8);
+               box-shadow: 0 0 15px rgba(0,0,0,0.2);
+               border-radius: 5px;
+           }
+           .info h4 {
+               margin: 0 0 px;
+               color: #777;
+           }
 
-
-    
-        </script>
+       </style>
     </body>
 </html>
