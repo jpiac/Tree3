@@ -10,10 +10,31 @@
    crossorigin=""></script>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+        
         <style>
             #mapid {height: 100vh; max-width: 100%;}
+
+
+
+            .info {
+                z-index: 999;
+                padding: 60px 80px;
+                font: 14px/16px Arial, Helvetica, sans-serif;
+                background: white;
+                background: rgba(225,225,225,0.8);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+            }
+            
+            .info h4 {
+                margin: 0 0 5px;
+                color: #777;
+            }
+
         </style>
+        
     </head>
+    
     <body>
         <div id="mapid">
         </div>
@@ -29,9 +50,20 @@
             accessToken: 'pk.eyJ1IjoianBpYWMiLCJhIjoiY2o1azR3ejE0MnN2ejMzbzg0b29sbGYzcSJ9.RUV9ehVJ9V3aetQCqP60tg'
             }).addTo(mymap);
 
-            var geojson;
-
             var info = L.control();
+
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+
+            info.update = function (props) {
+                this._div.innerHTLM = '<h4>Country Name</h4>' + (props ?
+                '<b>' + props.name + 'test' : 'Hover over a country');
+            };
+
+            info.addTo(mymap);
 
             function highlightFeature(e) {
                 var layer = e.target;
@@ -40,7 +72,7 @@
                 weight: 5,
                 color: '#666',
                 dashArray: '',
-                fillOpacity: 0.7
+                fillOpacity: 0.2
                 });
 
                 if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
@@ -48,7 +80,9 @@
                 }  
                 
                 info.update(layer.feature.properties);
-            };
+            }
+
+            var geojson;
 
             function resetHighlight(e) {
                 geojson.resetStyle(e.target);
@@ -61,20 +95,7 @@
                 mouseover: highlightFeature,
                 mouseout: resetHighlight,
                 });
-            };
-
-            info.onAdd = function (map) {
-                this._div = L.DomUtil.create('div', 'info');
-                this.update();
-                return this._div;
-            };
-
-            info.update = function (props) {
-                this._div.innerHTLM = '<h4>Country Name</h4>' + (props ?
-                '<b>' + props.name : 'Hover over a country');
-            };
-
-            info.addTo(mymap);
+            }
 
             $.getJSON('https://raw.githubusercontent.com/jpiac/Tree3/main/JSONS/Countries.geojson',function(countries){
             L.geoJson(countries).addTo(mymap);
@@ -83,26 +104,8 @@
                 onEachFeature: onEachFeature
             }).addTo(mymap);
 
-        
-
             });
        </script>
-       <style>
-
-           .info {
-               z-index: 999;
-               padding: 60px 80px;
-               font: 14px/16px Arial, Helvetica, sans-serif;
-               background: white;
-               background: rgba(225,225,225,0.8);
-               box-shadow: 0 0 15px rgba(0,0,0,0.2);
-               border-radius: 5px;
-           }
-           .info h4 {
-               margin: 0 0 px;
-               color: #777;
-           }
-
-       </style>
+     
     </body>
 </html>
