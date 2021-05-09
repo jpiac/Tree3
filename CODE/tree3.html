@@ -14,8 +14,6 @@
         <style>
             #mapid {height: 100vh; max-width: 100%;}
 
-
-
             .info {
                 z-index: 999;
                 padding: 60px 80px;
@@ -40,7 +38,7 @@
         </div>
         <script>
 
-            var mymap = L.map('mapid').setView([0, 0], 2.5);
+            var map = L.map('mapid').setView([0, 0], 2.5);
             L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
             maxZoom: 18,
@@ -48,7 +46,7 @@
             tileSize: 512,
             zoomOffset: -1,
             accessToken: 'pk.eyJ1IjoianBpYWMiLCJhIjoiY2o1azR3ejE0MnN2ejMzbzg0b29sbGYzcSJ9.RUV9ehVJ9V3aetQCqP60tg'
-            }).addTo(mymap);
+            }).addTo(map);
 
             var info = L.control();
 
@@ -63,7 +61,7 @@
                 '<b>' + props.name + 'test' : 'Hover over a country');
             };
 
-            info.addTo(mymap);
+            info.addTo(map);
 
             function highlightFeature(e) {
                 var layer = e.target;
@@ -98,11 +96,11 @@
             }
 
             $.getJSON('https://raw.githubusercontent.com/jpiac/Tree3/main/JSONS/Countries.geojson',function(countries){
-            L.geoJson(countries).addTo(mymap);
+            L.geoJson(countries).addTo(map);
 
             geojson =  L.geoJson(countries, {
                 onEachFeature: onEachFeature
-            }).addTo(mymap);
+            }).addTo(map);
 
             });
        </script>
