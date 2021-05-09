@@ -17,7 +17,7 @@
             .info {
                 z-index: 999;
                 padding: 60px 80px;
-                font: 14px/16px Arial, Helvetica, sans-serif;
+                font: 16px Arial, Helvetica, sans-serif;
                 background: white;
                 background: rgba(225,225,225,0.8);
                 box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -47,6 +47,8 @@
             zoomOffset: -1,
             accessToken: 'pk.eyJ1IjoianBpYWMiLCJhIjoiY2o1azR3ejE0MnN2ejMzbzg0b29sbGYzcSJ9.RUV9ehVJ9V3aetQCqP60tg'
             }).addTo(map);
+
+            var geojson;
 
             var info = L.control();
 
@@ -78,9 +80,7 @@
                 }  
                 
                 info.update(layer.feature.properties);
-            }
-
-            var geojson;
+            }          
 
             function resetHighlight(e) {
                 geojson.resetStyle(e.target);
@@ -88,14 +88,19 @@
                 info.update();
             };
 
+            function zoomToFeature(e) {
+                map.fitBounds(e.target.getBounds());
+            }
+
             function onEachFeature(feature, layer) {
                 layer.on({
                 mouseover: highlightFeature,
                 mouseout: resetHighlight,
+                click: zoomToFeature
                 });
             }
 
-            $.getJSON('https://raw.githubusercontent.com/jpiac/Tree3/main/JSONS/Countries.geojson',function(countries){
+            $.getJSON('https://raw.githubusercontent.com/jpiac/Tree3/main/JSONS/all_primary_countries_GEO.json',function(countries){
             L.geoJson(countries).addTo(map);
 
             geojson =  L.geoJson(countries, {
