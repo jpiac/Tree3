@@ -16,7 +16,7 @@
 
             .info {
                 z-index: 999;
-                padding: 60px 80px;
+                padding: 15px 20px;
                 font: 16px Arial, Helvetica, sans-serif;
                 background: white;
                 background: rgba(225,225,225,0.8);
@@ -59,8 +59,8 @@
             };
 
             info.update = function (props) {
-                this._div.innerHTLM = '<h4>Country Name</h4>' + (props ?
-                '<b>' + props.name + 'test' : 'Hover over a country');
+                this._div.innerHTML = '<h4>Country Name</h4>' + (props ?
+                '<b>' + props.name : 'Hover over a country');
             };
 
             info.addTo(map);
